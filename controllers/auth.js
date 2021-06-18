@@ -1,7 +1,9 @@
 const bcryptjs = require('bcryptjs')
 const jsonWebToken = require('jsonwebtoken')
+
 const User = require('../models/User')
 const tokenKey = require('../config/tokenKey')
+const exceptionHandler = require('../utilities/exceptionHandler')
 
 module.exports.login = async function(req, res) {
   const user = await User.findOne({email: req.body.email})
@@ -53,10 +55,7 @@ module.exports.register = async function(req, res) {
         user: user
       })
     }catch(e){
-      res.status(408).json({
-        message: 'User is not saved',
-        exception: e
-      })
+      exceptionHandler(res, e)
     }
   }
 

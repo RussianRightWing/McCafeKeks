@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const passport = require('passport')
 
 const mongoKeys = require('./config/mongoKeys')
 const authRoutes = require('./routes/auth')
@@ -21,7 +22,8 @@ app.use(cors())
 mongoose.connect(mongoKeys.mongoURl)
     .then(()=> {console.log('all good with mongoDB')})
     .catch(error => console.log(error))
-
+app.use(passport.initialize())
+require('./checkPassport/passport')(passport)
 
 app.use('/api/auth', authRoutes)
 app.use('/api/analytics', analyticsRoutes)

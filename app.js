@@ -23,7 +23,7 @@ mongoose.connect(mongoKeys.mongoURl)
     .then(()=> {console.log('all good with mongoDB')})
     .catch(error => console.log(error))
 app.use(passport.initialize())
-require('./checkPassport/passport')(passport)
+require('./middleware/passport')(passport)
 
 app.use('/api/auth', authRoutes)
 app.use('/api/analytics', analyticsRoutes)

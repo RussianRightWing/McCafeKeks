@@ -12,7 +12,7 @@ const categoryPosition = new Schema ({
     },
     category: {
         type: Schema.Types.ObjectId,
-        red: 'category'
+        ref: 'category'
     },
     user: {
         type: Schema.Types.ObjectId,

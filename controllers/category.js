@@ -1,21 +1,74 @@
-module.exports.getAll = function(req, res) {
-    res.status(200).json({
-        result: 'Authorisation complete'
-    })
-}
+const Category = require('../models/Category')
+const Position = require('../models/Position')
+const exceptionHandler = require('../utilities/exceptionHandler')
 
-module.exports.getById = function(req, res) {
-
-}
-
-module.exports.remove = function(req, res) {
-
-}
-
-module.exports.create = function(req, res) {
+module.exports.getAll = async function(req, res) {
+    try {
+        const categories = await Category.find({
+            user: req.user.id
+        })
+        res.status(200).json(categories)
+    }catch (e){
+        exceptionHandler(e)
+    }
 
 }
 
-module.exports.update = function(req, res) {
+module.exports.getById = async function(req, res) {
+    try {
+        const category = await Category.findById(req.params.id)
+        res.status(200).json(category)
+    } catch (e){
+        exceptionHandler(e)
+    }
+}
 
+module.exports.remove = async function(req, res) {
+    try {
+        await Position.remove({category: req.params.id})
+        await Category.remove({_id: req.params.id})
+        res.status(200).json({
+            message: 'Category was deleted'
+        })
+    } catch (e){
+        exceptionHandler(e)
+    }
+}
+
+module.exports.create = async function(req, res) {
+    const checkCategory = await  Category.findOne({name: req.body.name})
+
+    if (checkCategory) {
+        res.status(409).json({
+            message: 'Category already exists'
+        })
+    } else {
+        try {
+            const newCategory = new Category({
+                name: req.body.name,
+                imageSrc: req.file ? req.file.path : '',
+                user: req.user.id
+            })
+            console.log(newCategory)
+            await newCategory.save()
+            res.status(201).json(newCategory)
+        } catch (e) {
+            exceptionHandler(e)
+        }
+    }
+}
+
+module.exports.update = async function(req, res) {
+    try {
+        await Category.findByIdAndUpdate(
+            {_id: req.params.id},
+            {$set: req.body},
+            {new: true}
+        )
+        res.status(200).json({
+            message: 'Category was updated'
+        })
+    } catch (e){
+        exceptionHandler(e)
+    }
 }

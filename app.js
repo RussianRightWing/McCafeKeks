@@ -24,7 +24,7 @@ mongoose.connect(mongoKeys.mongoURl)
     .catch(error => console.log(error))
 app.use(passport.initialize())
 require('./middleware/passport')(passport)
-
+app.use('/upload', express.static('upload'))
 app.use('/api/auth', authRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/category', categoryRoutes)

@@ -1,11 +1,11 @@
 const multer = require('multer')
 const moment = require('moment')
 
-const upload = multer.diskStorage({
-    destination(req, file, cb){
-        cb(null, '../files/')
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'upload/')
     },
-    filename(req, file, cb){
+    filename: (req, file, cb) => {
         const date = moment().format('DDMMYYYY_HHmmss_SSS')
         cb(null, `${date}-${file.originalname}`)
     }
@@ -24,7 +24,7 @@ const sizeFilter = {
 }
 
 module.exports = multer({
-    upload,
+    storage,
     typeFilter,
     sizeFilter
 })

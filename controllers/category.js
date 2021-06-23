@@ -1,4 +1,4 @@
-const Category = require('../models/Category')
+    const Category = require('../models/Category')
 const Position = require('../models/Position')
 const exceptionHandler = require('../utilities/exceptionHandler')
 
@@ -46,10 +46,9 @@ module.exports.create = async function(req, res) {
         try {
             const newCategory = new Category({
                 name: req.body.name,
-                imageSrc: req.file ? req.file.path : '',
+                imageSrc: req.file ? req.file.path : 'fuck',
                 user: req.user.id
             })
-            console.log(newCategory)
             await newCategory.save()
             res.status(201).json(newCategory)
         } catch (e) {
@@ -59,10 +58,16 @@ module.exports.create = async function(req, res) {
 }
 
 module.exports.update = async function(req, res) {
+    const updated = {
+        name: req.body.name,
+    }
+    if (req.file){
+        updated.imageSrc = req.file.path
+    }
     try {
         await Category.findByIdAndUpdate(
             {_id: req.params.id},
-            {$set: req.body},
+            {$set: updated},
             {new: true}
         )
         res.status(200).json({
